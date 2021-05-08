@@ -12,9 +12,9 @@ module.exports.getParams = (baseName, argv) => {
     .version('0.1')
     .description('CLI tool that will encode and decode a text by Caesar cipher')
     .option('-s, --shift <number>', 'a shift')
-    .option('-i, --input <file>', 'an input file')
-    .option('-o, --output <file>', 'an output file')
-    .option('-a, --action <string>', 'an action encode/decode')
+    .option('-i, --input [path]', 'an input file', '')
+    .option('-o, --output [path]', 'an output file', '')
+    .option('-a, --action [string]', 'an action encode/decode', '')
     .on('--help', () => helpMsg.getHelp(baseName))
     .parse(argv);
 
@@ -26,7 +26,7 @@ module.exports.getParams = (baseName, argv) => {
   }
 
   if (!Number.isInteger(+shift)) {
-    process.stderr.write('Iinvalid required parameter: <Shift>. The parameter: Shift! must be an integer');
+    process.stderr.write('Iinvalid required parameter: <Shift>. The parameter: <Shift> must be an integer');
     process.exit(-1);
   }
 
