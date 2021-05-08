@@ -1,4 +1,5 @@
-const minimist = require('minimist');
+const { program } = require('commander');
+const helpMsg = require('./help-msg');
 
 module.exports.getParams = (baseName, argv) => {
 
@@ -7,35 +8,35 @@ module.exports.getParams = (baseName, argv) => {
     process.exit(-1);
   }
 
-  const args = minimist(argv.slice(2), {
-    string: ['i', 'o', 'a'],
-    alias: {
-      's': 'shift',
-      'i': 'input',
-      'o': 'output',
-      'a': 'action',
-      // 'h': 'help',
-    },
-    unknown: (arg) => {
-      console.error('Unknown option: ', arg);
-      process.exit(-1); 
-    }
-  });
+  program
+    .version('0.1')
+    .description('CLI tool that will encode and decode a text by Caesar cipher')
+    .option('-s, --shift <number>', 'a shift')
+    .option('-i, --input <file>', 'an input file')
+    .option('-o, --output <file>', 'an output file')
+    .option('-a, --action <string>', 'an action encode/decode')
+    .on('--help', () => helpMsg.getHelp(baseName))
+    .parse(argv);
 
-  const {s: shift, i: input, o: output, a: action, /* h: help */} = args;
+  const {shift, input, output, action} = program.opts();
 
-  if (typeof shift !== 'number') {
-    process.stderr.write('Missing or invalid required parameter: Shift!. The parameter: Shift! must be an integer');
+  if (!shift) {
+    process.stderr.write('Missing required parameter: <Shift>. Use an -s --shift. <Shift> must be an integer');
+    process.exit(-1);
+  }
+
+  if (!Number.isInteger(+shift)) {
+    process.stderr.write('Iinvalid required parameter: <Shift>. The parameter: Shift! must be an integer');
     process.exit(-1);
   }
 
   if (!action) {
-      process.stderr.write('Missing required parameter: Action!. Use an -a --action');
+      process.stderr.write('Missing required parameter: <Action>. Use an -a --action');
       process.exit(-1);
   }
   
   if (action !== 'encode' && action !== 'decode'){
-    process.stderr.write('Invalid parameter value specified! Allowed value encode or decode');
+    process.stderr.write('Invalid parameter: <Action> value specified! Allowed value encode or decode');
     process.exit(-1);
   }
 
