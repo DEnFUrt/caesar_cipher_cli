@@ -1,6 +1,8 @@
 const { program } = require('commander');
 const helpMsg = require('./help-msg');
 
+const CORRECT_ACTIONS = ['encode', 'decode'];
+
 module.exports.getParams = (baseName, argv) => {
 
   if (argv.length <= 2) {
@@ -26,7 +28,8 @@ module.exports.getParams = (baseName, argv) => {
   }
 
   if (!Number.isInteger(+shift)) {
-    process.stderr.write('Iinvalid required parameter: <Shift>. The parameter: <Shift> must be an integer');
+    process.stderr.write(`<Shift> iinvalid parameter, value specified: '${shift}'. 
+      The parameter: <Shift> must be an integer`);
     process.exit(-1);
   }
 
@@ -34,9 +37,10 @@ module.exports.getParams = (baseName, argv) => {
       process.stderr.write('Missing required parameter: <Action>. Use an -a --action');
       process.exit(-1);
   }
-  
-  if (action !== 'encode' && action !== 'decode'){
-    process.stderr.write('Invalid parameter: <Action> value specified! Allowed value encode or decode');
+
+  if (!CORRECT_ACTIONS.includes(action)){
+    process.stderr.write(`<Action> invalid parameter, value specified: '${action}'. 
+      Allowed value: ${CORRECT_ACTIONS.join(' / ')}`);
     process.exit(-1);
   }
 
